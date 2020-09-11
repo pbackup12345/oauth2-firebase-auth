@@ -1,5 +1,3 @@
 export interface ConsentViewTemplate {
-
-  provide(): Promise<string>
-
+  provide(): Promise<string>;
 }

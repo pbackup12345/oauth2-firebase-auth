@@ -1,1 +1,1 @@
-export * from "./custom_grant_handler_provider"
+export * from "./custom_grant_handler_provider";

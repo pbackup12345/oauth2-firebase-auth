@@ -1,14 +1,13 @@
 import * as admin from "firebase-admin";
 
 export class Client {
-
-  private _clientId: string
-  private _providerName: string
-  private _scopes: string[]
-  private _responseTypes: string[]
-  private _grantTypes: string[]
-  private _userId: string
-  private _clientSecret: string
+  private _clientId: string;
+  private _providerName: string;
+  private _scopes: string[];
+  private _responseTypes: string[];
+  private _grantTypes: string[];
+  private _userId: string;
+  private _clientSecret: string;
 
   get clientId(): string {
     return this._clientId;
@@ -65,27 +64,36 @@ export class Client {
   set clientSecret(value: string) {
     this._clientSecret = value;
   }
-
 }
 
 export class CloudFirestoreClients {
-
   public static async fetch(clientId: string): Promise<Client | undefined> {
-    const db = admin.firestore()
-    const client = await db.collection("clients").doc(clientId).get()
+    const db = admin.firestore();
+    const client = await db.collection("clients").doc(clientId).get();
     if (client.exists) {
-      const result = new Client()
-      result.clientId = client.id
-      result.clientSecret = client.get("client_secret")
-      result.grantTypes = Object.keys(client.get("grant_type")).filter((value: string): boolean => {return client.get(`grant_type.${value}`)})
-      result.responseTypes = Object.keys(client.get("response_type")).filter((value: string): boolean => {return client.get(`response_type.${value}`)})
-      result.scopes = Object.keys(client.get("scope")).filter((value: string): boolean => {return client.get(`scope.${value}`)})
-      result.userId = client.get("user_id")
-      result.providerName = client.get("provider_name")
-      return result
+      const result = new Client();
+      result.clientId = client.id;
+      result.clientSecret = client.get("client_secret");
+      result.grantTypes = Object.keys(client.get("grant_type")).filter(
+        (value: string): boolean => {
+          return client.get(`grant_type.${value}`);
+        }
+      );
+      result.responseTypes = Object.keys(client.get("response_type")).filter(
+        (value: string): boolean => {
+          return client.get(`response_type.${value}`);
+        }
+      );
+      result.scopes = Object.keys(client.get("scope")).filter(
+        (value: string): boolean => {
+          return client.get(`scope.${value}`);
+        }
+      );
+      result.userId = client.get("user_id");
+      result.providerName = client.get("provider_name");
+      return result;
     } else {
-      return undefined
+      return undefined;
     }
   }
-
 }

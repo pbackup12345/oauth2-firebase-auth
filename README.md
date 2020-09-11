@@ -2,10 +2,10 @@
 
 This library provides OAuth2 server implementation for Firebase. The points are:
 
-* Supporting Google Sign-In, GitHub Login and Facebook Login to authenticate users as Federation ID provider using Firebase Authentication.
-* Providing each endpoint for Cloud Functions.
-* Storing information into Cloud Firestore.
-* Supporting Authorization Code Grant, Implicit Grant and Client Credentials grant of OAuth 2.0.
+- Supporting Google Sign-In, GitHub Login and Facebook Login to authenticate users as Federation ID provider using Firebase Authentication.
+- Providing each endpoint for Cloud Functions.
+- Storing information into Cloud Firestore.
+- Supporting Authorization Code Grant, Implicit Grant and Client Credentials grant of OAuth 2.0.
 
 [![NPM Version](https://img.shields.io/npm/v/oauth2-firebase.svg)](https://www.npmjs.org/package/oauth2-firebase)
 
@@ -94,12 +94,12 @@ exports.authentication = githubAccountAuthentication();
 
 ...
 ```
- 
+
 By the code above, the following endpoints are defined:
 
-* `https://.../token` - Token endpoint.
-* `https://.../authorize` - Authorization endpoint.
-* `https://.../authentication` - Login page for Google Sign-In.
+- `https://.../token` - Token endpoint.
+- `https://.../authorize` - Authorization endpoint.
+- `https://.../authentication` - Login page for Google Sign-In.
 
 ## Generate a shared key
 
@@ -142,8 +142,8 @@ $ firebase deploy --only functions
 
 You need to setup the database to operate OAuth2.0 server as like the following:
 
-* Register your client
-* Set a description for each scope
+- Register your client
+- Set a description for each scope
 
 ## Register your client
 
@@ -151,16 +151,16 @@ In OAuth2.0, each client must be registered in advance. This library uses the Cl
 for the client definitions. In the current version, you need to register client definitions with the Firebase Console
 manually. To register a client definition, add a new doc in a "clients" collection as like the following:
 
-* Collection: `clients`
-* Doc ID: Auto-generated. This will be used as a Client ID value.
-* Fields:
-  * `user_id` - The user ID which represents this client as a user.
-  * `provider_name` - The provider name who this client provides.
-  * `client_secret` - The client secret string. You need to generate this string as the shared key, and need to share the provider.
-  * `redirect_uri` - If this client supports Authorization Code grant and Implicit grant, you need to set this redirect_uri string.
-  * `grant_type` - This is an object. Each key represents a grant type, and each value is boolean whether the grant type is supported or not. You need to set these entries: `authorization_code`, `password`, `client_credentials` and `refresh_token`.
-  * `response_type` - This is an object. Each key represents a response type, and each value is boolean whether the response type is supported or not. You need to set these entries: `code` and `token`.
-  * `scope` - This is an object. Each key represents a scope, and each value is boolean whether the scope is supported or not. You need to set the entry: `profile`.
+- Collection: `clients`
+- Doc ID: Auto-generated. This will be used as a Client ID value.
+- Fields:
+  - `user_id` - The user ID which represents this client as a user.
+  - `provider_name` - The provider name who this client provides.
+  - `client_secret` - The client secret string. You need to generate this string as the shared key, and need to share the provider.
+  - `redirect_uri` - If this client supports Authorization Code grant and Implicit grant, you need to set this redirect_uri string.
+  - `grant_type` - This is an object. Each key represents a grant type, and each value is boolean whether the grant type is supported or not. You need to set these entries: `authorization_code`, `password`, `client_credentials` and `refresh_token`.
+  - `response_type` - This is an object. Each key represents a response type, and each value is boolean whether the response type is supported or not. You need to set these entries: `code` and `token`.
+  - `scope` - This is an object. Each key represents a scope, and each value is boolean whether the scope is supported or not. You need to set the entry: `profile`.
 
 The following is a sample JSON string which represents the values above:
 
@@ -190,11 +190,11 @@ The following is a sample JSON string which represents the values above:
 
 This library shows a consent page to ask whether they allow or deny scopes. You need to register descriptions for each scope with the Firebase Console manually. To register a scope description, add a new doc in a "scopes" collection as like the following:
 
-* Collection: `scopes`
-* Doc ID: Auto-generated.
-* Fields:
-  * `name` - Scope name (ex. "profile").
-  * `description` - Scope description (ex. "User profile information (User ID and Nickname)").
+- Collection: `scopes`
+- Doc ID: Auto-generated.
+- Fields:
+  - `name` - Scope name (ex. "profile").
+  - `description` - Scope description (ex. "User profile information (User ID and Nickname)").
 
 The following is a sample JSON string which represents the values above:
 
@@ -209,8 +209,8 @@ The following is a sample JSON string which represents the values above:
 
 This library provides some additional endpoints:
 
-* userinfo - Userinfo API endpoint.
-* tokeninfo - Tokeninfo API endpoint.
+- userinfo - Userinfo API endpoint.
+- tokeninfo - Tokeninfo API endpoint.
 
 ## Userinfo API endpoint
 
@@ -293,11 +293,11 @@ Configuration.init({
 
 In this library, the default values are:
 
-* Authorization Code Grant: 86400
-* Implicit Grant: 3600
-* Password: 86400
-* Client Credentials: 86400
-* Refresh Token: 86400
+- Authorization Code Grant: 86400
+- Implicit Grant: 3600
+- Password: 86400
+- Client Credentials: 86400
+- Refresh Token: 86400
 
 ## Customize the consent page design
 
@@ -308,13 +308,15 @@ To customize the page design, you need to create a new class which implements th
 For example, the class code will be like the following:
 
 ```javascript
-import {ConsentViewTemplate} from "oauth2-firebase/dist/endpoint/views/consent_view_template";
+import { ConsentViewTemplate } from "oauth2-firebase/dist/endpoint/views/consent_view_template";
 
 export class MyConsentViewTemplate implements ConsentViewTemplate {
-
   provide(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      resolve(`<!DOCTYPE html>
+    return (
+      new Promise() <
+      string >
+      ((resolve, reject) => {
+        resolve(`<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -338,20 +340,20 @@ export class MyConsentViewTemplate implements ConsentViewTemplate {
 </form>
 </body>
 </html>
-`)
-    })
+`);
+      })
+    );
   }
-
 }
 ```
 
 The template string is written as the "ejs" template. This library binds the following values to the template at rendering.
 
-* `providerName: string` - The provider name of the client.
-* `scope: string` - The scope string devided by space the client code specifies.
-* `scopes: Map<string, string>` - The map object which has a set of the scope name and its description.
-* `encryptedAuthToken: string` - The encrypted auth token. You need to set this as the hidden parameter.
-* `encryptedUserId: string` - The encrypted user ID. You need to set this as the hidden parameter.
+- `providerName: string` - The provider name of the client.
+- `scope: string` - The scope string devided by space the client code specifies.
+- `scopes: Map<string, string>` - The map object which has a set of the scope name and its description.
+- `encryptedAuthToken: string` - The encrypted auth token. You need to set this as the hidden parameter.
+- `encryptedUserId: string` - The encrypted user ID. You need to set this as the hidden parameter.
 
 And, you need to set the instance to the Configuration class instance as like the following:
 
@@ -382,8 +384,8 @@ checks whether the access token is valid or not against using the protected reso
 and/or creates some resource or does something. This library provides a convenience abstract class. You can define your
 endpoint by creating a new class which extends the abstract class and implements the following two methods:
 
-* `validateScope()` - Check whether the passed scopes are valid to call this endpoint.
-* `handleRequest()` - The code body to access to target resources.
+- `validateScope()` - Check whether the passed scopes are valid to call this endpoint.
+- `handleRequest()` - The code body to access to target resources.
 
 To publish your endpoint on the Cloud Functions, you need to retrieve the endpoint function by the `endpoint` property.
 As the result, your code will be like the following:
@@ -398,7 +400,7 @@ class FriendsEndpoint extends AbstractProtectedResourceEndpoint {
   protected validateScope(scopes: string[]): boolean {
     return scopes.indexOf("frields") !== -1;
   }
-  
+
   protected handleRequest(req: express.Request, endpointInfo: ProtectedResourceResponse): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       fetchFrields(endpointInfo.userId).then(friends => {
