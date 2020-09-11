@@ -63,11 +63,13 @@ export class Configuration {
       return this._tokens_expires_in;
     } else {
       const result = new Map<string, number>();
+
       result.set("authorization_code", 86400);
       result.set("implicit", 3600);
       result.set("password", 86400);
       result.set("client_credentials", 86400);
       result.set("refresh_token", 86400);
+
       return result;
     }
   }

@@ -15,6 +15,7 @@ export class Navigation {
     fragments?: { [key: string]: string | number }
   ): void {
     const targetUrl = url.parse(uri, true);
+
     if (parameters) {
       const query = targetUrl.query;
       Object.keys(parameters).forEach((key: string): void => {
@@ -22,9 +23,11 @@ export class Navigation {
         query[key] = typeof value === "string" ? value : String(value);
       });
     }
+
     if (fragments) {
       targetUrl.hash = `#${querystring.stringify(fragments)}`;
     }
+
     resp.redirect(url.format(targetUrl));
   }
 

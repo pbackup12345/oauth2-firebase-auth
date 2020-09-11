@@ -34,12 +34,16 @@ export class CloudFirestoreDataHandler implements DataHandler {
       expires_in: expiresIn,
       created_on: createdOn,
     };
+
     await db.collection("access_tokens").add(data);
+
     const result = new AccessToken();
+
     result.authId = authInfo.id;
     result.expiresIn = expiresIn;
     result.createdOn = createdOn;
     result.token = token;
+
     return result;
   }
 
@@ -50,17 +54,21 @@ export class CloudFirestoreDataHandler implements DataHandler {
   ): Promise<AuthInfo | undefined> {
     // TODO: Check the scope
     const db = admin.firestore();
+
     let queryRef = db
       .collection("auth_infos")
       .where("client_id", "==", clientId)
       .where("user_id", "==", userId);
+
     if (scope) {
       scope.split(" ").forEach((s) => {
         queryRef = queryRef.where(`scope.${s}`, "==", true);
       });
     }
+
     const snapshot = await queryRef.get();
     const code = secureRandomString({ length: 64 });
+
     if (snapshot.empty) {
       const refreshToken = secureRandomString();
       const data = {
@@ -79,31 +87,40 @@ export class CloudFirestoreDataHandler implements DataHandler {
       };
       const authInfoRef = await db.collection("auth_infos").add(data);
       const result = new AuthInfo();
+
       result.id = authInfoRef.id;
       result.userId = userId;
       result.clientId = clientId;
       result.refreshToken = refreshToken;
       result.code = code;
+
       if (scope) {
         result.scope = scope;
       }
+
       return result;
     } else {
       // TODO: Check the size of the docs
       const authInfo = snapshot.docs[0];
+
       await db.collection("auth_infos").doc(authInfo.id).update({
         code: code,
       });
+
       const result = new AuthInfo();
+
       result.id = authInfo.id;
       result.userId = authInfo.get("user_id");
       result.clientId = authInfo.get("client_id");
       result.refreshToken = authInfo.get("refresh_token");
       result.code = code;
+
       const scopes = Object.keys(authInfo.get("scope"));
+
       if (scopes.length > 0) {
         result.scope = scopes.join(" ");
       }
+
       return result;
     }
   }
@@ -117,25 +134,31 @@ export class CloudFirestoreDataHandler implements DataHandler {
       .collection("auth_infos")
       .where(fieldName, "==", fieldValue);
     const snapshot = await queryRef.get();
+
     if (snapshot.empty) {
       return undefined;
     } else {
       // TODO: Check the size of the docs
       const authInfo = snapshot.docs[0];
+
       return this.convertAuthInfo(authInfo);
     }
   }
 
   private convertAuthInfo(authInfo: firestore.DocumentSnapshot): AuthInfo {
     const result = new AuthInfo();
+
     result.id = authInfo.id;
     result.userId = authInfo.get("user_id");
     result.clientId = authInfo.get("client_id");
     result.refreshToken = authInfo.get("refresh_token");
+
     const scopes = Object.keys(authInfo.get("scope"));
+
     if (scopes.length > 0) {
       result.scope = scopes.join(" ");
     }
+
     return result;
   }
 
@@ -145,9 +168,11 @@ export class CloudFirestoreDataHandler implements DataHandler {
   ): Promise<string | undefined> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       return client.get("user_id");
     }
+
     return undefined;
   }
 
@@ -158,6 +183,7 @@ export class CloudFirestoreDataHandler implements DataHandler {
   ): Promise<boolean> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       // TODO: Check the client status and/or etc.
       return (
@@ -165,16 +191,19 @@ export class CloudFirestoreDataHandler implements DataHandler {
         client.get("client_secret") === clientSecret
       );
     }
+
     return false;
   }
 
   async validateClientById(clientId: string): Promise<boolean> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       // TODO: Check the client status and/or etc.
       return true;
     }
+
     return false;
   }
 
@@ -184,11 +213,13 @@ export class CloudFirestoreDataHandler implements DataHandler {
   ): Promise<boolean> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       return responseType.split(" ").every((value: string): boolean => {
         return client.get(`response_type.${value}`);
       });
     }
+
     return false;
   }
 
@@ -198,10 +229,12 @@ export class CloudFirestoreDataHandler implements DataHandler {
   ): Promise<boolean> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       const registeredRedirectUri = client.get("redirect_uri");
       const validRedirectUrl = url.parse(registeredRedirectUri);
       const redirectUrl = url.parse(redirectUri);
+
       return (
         validRedirectUrl.protocol === redirectUrl.protocol &&
         validRedirectUrl.host === redirectUrl.host &&
@@ -215,6 +248,7 @@ export class CloudFirestoreDataHandler implements DataHandler {
     if (scope) {
       const db = admin.firestore();
       const client = await db.collection("clients").doc(clientId).get();
+
       if (client.exists) {
         return client.get(`scope.${scope}`);
       }
@@ -236,10 +270,12 @@ export class CloudFirestoreDataHandler implements DataHandler {
       // TODO: Check the size of the docs
       const accessToken = snapshot.docs[0];
       const result = new AccessToken();
+
       result.authId = accessToken.get("auth_info_id");
       result.expiresIn = accessToken.get("expires_in");
       result.createdOn = accessToken.get("created_on");
       result.token = accessToken.get("token");
+
       return result;
     }
   }
@@ -257,6 +293,7 @@ export class CloudFirestoreDataHandler implements DataHandler {
   async getAuthInfoById(id: string): Promise<AuthInfo | undefined> {
     const db = admin.firestore();
     const authInfo = await db.collection("auth_infos").doc(id).get();
+
     if (authInfo.exists) {
       return this.convertAuthInfo(authInfo);
     } else {
@@ -266,14 +303,17 @@ export class CloudFirestoreDataHandler implements DataHandler {
 
   async validateUserById(userId: string): Promise<boolean> {
     const auth = admin.auth();
+
     try {
       const user = await auth.getUser(userId);
+
       if (user) {
         return true;
       }
     } catch (e) {
       console.log("e", e);
     }
+
     return false;
   }
 

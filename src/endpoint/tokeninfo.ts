@@ -8,11 +8,14 @@ export function tokeninfo() {
     if (req.method === "GET") {
       const request = new RequestWrapper(req);
       const tokeninfoEndpoint = new TokeninfoEndpoint();
+
       tokeninfoEndpoint.dataHandlerFactory = new CloudFirestoreDataHandlerFactory();
+
       try {
         const tokeninfoEndpointResponse = await tokeninfoEndpoint.handleRequest(
           request
         );
+
         resp.set("Content-Type", "application/json; charset=UTF-8");
         resp
           .status(tokeninfoEndpointResponse.code)

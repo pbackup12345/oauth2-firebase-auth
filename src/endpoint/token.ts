@@ -13,15 +13,18 @@ export function token() {
       const request = new RequestWrapper(req);
       const tokenEndpoint = new TokenEndpoint();
       const clientCredentialFetcherProvider = new DefaultClientCredentialFetcherProvider();
+
       tokenEndpoint.grantHandlerProvider = new CustomGrantHandlerProvider(
         clientCredentialFetcherProvider
       );
       tokenEndpoint.clientCredentialFetcherProvider = clientCredentialFetcherProvider;
       tokenEndpoint.dataHandlerFactory = new CloudFirestoreDataHandlerFactory();
+
       try {
         const tokenEndpointResponse = await tokenEndpoint.handleRequest(
           request
         );
+
         resp.set("Content-Type", "application/json; charset=UTF-8");
         resp
           .status(tokenEndpointResponse.code)

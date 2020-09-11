@@ -70,27 +70,34 @@ export class CloudFirestoreClients {
   public static async fetch(clientId: string): Promise<Client | undefined> {
     const db = admin.firestore();
     const client = await db.collection("clients").doc(clientId).get();
+
     if (client.exists) {
       const result = new Client();
+
       result.clientId = client.id;
       result.clientSecret = client.get("client_secret");
+
       result.grantTypes = Object.keys(client.get("grant_type")).filter(
         (value: string): boolean => {
           return client.get(`grant_type.${value}`);
         }
       );
+
       result.responseTypes = Object.keys(client.get("response_type")).filter(
         (value: string): boolean => {
           return client.get(`response_type.${value}`);
         }
       );
+
       result.scopes = Object.keys(client.get("scope")).filter(
         (value: string): boolean => {
           return client.get(`scope.${value}`);
         }
       );
+
       result.userId = client.get("user_id");
       result.providerName = client.get("provider_name");
+
       return result;
     } else {
       return undefined;

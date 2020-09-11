@@ -16,15 +16,20 @@ export abstract class AbstractProtectedResourceEndpoint {
     return functions.https.onRequest(async (req, resp) => {
       const request = new RequestWrapper(req);
       const protectedResourceEndpoint = new ProtectedResourceEndpoint();
+
       protectedResourceEndpoint.accessTokenFetcherProvider = new DefaultAccessTokenFetcherProvider();
       protectedResourceEndpoint.dataHandlerFactory = new CloudFirestoreDataHandlerFactory();
+
       const result = await protectedResourceEndpoint.handleRequest(request);
+
       if (result.isSuccess()) {
         const endpointInfo = result.value;
+
         if (this.validateScope(endpointInfo.scope.split(" "))) {
           resp.set("Content-Type", "application/json; charset=UTF-8");
           try {
             const responseBody = await this.handleRequest(req, endpointInfo);
+
             resp.status(200).send(responseBody);
           } catch (e) {
             Navigation.sendError(resp, new UnknownError(e.toString()));

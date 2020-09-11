@@ -14,6 +14,7 @@ class AuthenticationApp {
     authenticationApp.get("/", (req, resp) => {
       const request = new RequestWrapper(req);
       const authToken = request.getParameter("auth_token");
+
       resp.render("authentication.ejs", {
         authToken: authToken,
         projectId: process.env.GCLOUD_PROJECT,
@@ -28,11 +29,14 @@ class AuthenticationApp {
       const idTokenString = request.getParameter("id_token")!;
       const success = request.getParameter("success");
       const error = request.getParameter("error");
+
       if (success === "true") {
         try {
           const idToken = await admin.auth().verifyIdToken(idTokenString);
+
           if (idToken.aud === process.env.GCLOUD_PROJECT) {
             const encryptedUserId = Crypto.encrypt(idToken.sub);
+
             Navigation.redirect(resp, "/authorize/consent", {
               auth_token: encryptedAuthToken,
               user_id: encryptedUserId,
@@ -44,9 +48,11 @@ class AuthenticationApp {
       } else {
         console.log("error", error);
       }
+
       const authToken = JSON.parse(
         Crypto.decrypt(request.getParameter("auth_token")!)
       );
+
       Navigation.redirect(resp, authToken["redirect_uri"], {
         error: "access_denied",
       });

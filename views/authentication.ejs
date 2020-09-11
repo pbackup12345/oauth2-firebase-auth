@@ -16,11 +16,14 @@
           authDomain: "<%= projectId %>.firebaseapp.com",
           projectId: "<%= projectId %>"
         };
+
         firebase.initializeApp(config);
+
         const provider = new firebase.auth.<%= providerName %>AuthProvider();
         provider.setCustomParameters({
           "prompt": "consent select_account"
         });
+
         (async () => {
           try {
             const {user, credential} = await firebase.auth().getRedirectResult();
@@ -30,6 +33,7 @@
             console.log("err", err);
           }
         })();
+
         firebase.auth().onAuthStateChanged(user => {
           if (user) {
             user.getIdToken(true).then(idToken => {

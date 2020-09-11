@@ -12,8 +12,10 @@ export class Crypto {
       ),
       iv
     );
+
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
+
     return `${iv.toString("hex")}:${encrypted.toString("hex")}`;
   };
 
@@ -29,8 +31,10 @@ export class Crypto {
       ),
       iv
     );
+
     let decrypted = decipher.update(encrypted);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
+
     return decrypted.toString();
   };
 }

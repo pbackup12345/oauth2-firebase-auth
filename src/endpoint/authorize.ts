@@ -15,12 +15,15 @@ const authorizeApp = express();
 authorizeApp.get("/entry", async (req, resp) => {
   const request = new RequestWrapper(req);
   const authorizationEndpoint = new AuthorizationEndpoint();
+
   authorizationEndpoint.dataHandlerFactory = new CloudFirestoreDataHandlerFactory();
   authorizationEndpoint.allowedResponseTypes = ["code", "token"];
+
   try {
     const authorizationEndpointResponse = await authorizationEndpoint.handleRequest(
       request
     );
+
     if (authorizationEndpointResponse.isSuccess()) {
       const authToken: { [key: string]: string | number } = {
         client_id: request.getParameter("client_id")!,
@@ -29,21 +32,27 @@ authorizeApp.get("/entry", async (req, resp) => {
         scope: request.getParameter("scope")!,
         created_at: Date.now(),
       };
+
       const state = request.getParameter("state");
+
       if (state) {
         authToken["state"] = state;
       }
+
       const authTokenString = Crypto.encrypt(JSON.stringify(authToken));
+
       Navigation.redirect(resp, "/authentication/", {
         auth_token: authTokenString,
       });
     } else {
       const error = authorizationEndpointResponse.error;
+
       resp.set("Content-Type", "application/json; charset=UTF-8");
       resp.status(error.code).send(error.toJson());
     }
   } catch (e) {
     console.error(e);
+
     resp.status(500).send(e.toString());
   }
 });
@@ -56,6 +65,7 @@ authorizeApp.get("/consent", async (req, resp) => {
   const encryptedUserId = request.getParameter("user_id")!;
   const scopes = await CloudFirestoreScopes.fetch();
   const consentViewTemplate = Configuration.instance.view_consent_template;
+
   try {
     const template = await consentViewTemplate.provide();
     const html = ejs.render(template, {
@@ -65,6 +75,7 @@ authorizeApp.get("/consent", async (req, resp) => {
       scopes,
       providerName: client!["providerName"],
     });
+
     resp.status(200).send(html);
   } catch (e) {
     console.error(e);
@@ -78,17 +89,23 @@ authorizeApp.post("/consent", async (req, resp) => {
   const authToken = JSON.parse(Crypto.decrypt(encryptedAuthToken));
   const encryptedUserId = requestWrapper.getParameter("user_id")!;
   const userId = Crypto.decrypt(encryptedUserId);
+
   const requestMap = new RequestMap();
+
   requestMap.setParameter("user_id", userId);
   requestMap.setParameter("state", authToken["state"]);
   requestMap.setParameter("client_id", authToken["client_id"]);
   requestMap.setParameter("redirect_uri", authToken["redirect_uri"]);
   requestMap.setParameter("response_type", authToken["response_type"]);
   requestMap.setParameter("scope", authToken["scope"]);
+
   const authorizationEndpoint = new AuthorizationEndpoint();
+
   authorizationEndpoint.dataHandlerFactory = new CloudFirestoreDataHandlerFactory();
   authorizationEndpoint.allowedResponseTypes = ["code", "token"];
+
   const action = requestWrapper.getParameter("action");
+
   if (action === "allow") {
     Navigation.backTo(
       resp,

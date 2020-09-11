@@ -11,6 +11,7 @@ export class UserinfoEndpoint extends AbstractProtectedResourceEndpoint {
   ): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       const auth = admin.auth();
+
       auth
         .getUser(endpointInfo.userId)
         .then((userRecord) => {
