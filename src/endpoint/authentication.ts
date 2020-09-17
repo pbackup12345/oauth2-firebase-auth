@@ -2,11 +2,16 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as express from "express";
 import * as path from "path";
+import * as qs from "qs";
+
 import { RequestWrapper } from "../models";
 import { Configuration, Crypto, Navigation } from "../utils";
 
 class AuthenticationApp {
-  static create(providerName: string): express.Express {
+  static create(
+    providerName: string,
+    authenticationUrl?: string
+  ): express.Express {
     const authenticationApp = express();
 
     authenticationApp.set("views", path.join(__dirname, "../../views"));
@@ -15,12 +20,23 @@ class AuthenticationApp {
       const request = new RequestWrapper(req);
       const authToken = request.getParameter("auth_token");
 
-      resp.render("authentication.ejs", {
+      const payload = {
         authToken: authToken,
-        projectId: process.env.GCLOUD_PROJECT,
-        projectApiKey: Configuration.instance.project_apikey,
-        providerName: providerName,
-      });
+      };
+
+      if (authenticationUrl) {
+        const strippedUrl = authenticationUrl.split("?")[0];
+        const urlWithPayload = `${strippedUrl}?${qs.stringify(payload)}`;
+
+        resp.redirect(urlWithPayload);
+      } else {
+        resp.render("authentication.ejs", {
+          ...payload,
+          projectId: process.env.GCLOUD_PROJECT,
+          projectApiKey: Configuration.instance.project_apikey,
+          providerName: providerName,
+        });
+      }
     });
 
     authenticationApp.post("/", async (req, resp) => {
@@ -72,4 +88,10 @@ export function facebookAccountAuthentication() {
 
 export function githubAccountAuthentication() {
   return functions.https.onRequest(AuthenticationApp.create("Github"));
+}
+
+export function customAuthentication(authenticationUrl: string) {
+  return functions.https.onRequest(
+    AuthenticationApp.create("Custom", authenticationUrl)
+  );
 }

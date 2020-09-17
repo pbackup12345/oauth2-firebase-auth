@@ -28,11 +28,13 @@
   },
   "homepage": "https://github.com/yoichiro/oauth2-firebase.git",
   "dependencies": {
+    "@types/qs": "^6.9.5",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "firebase-admin": "~5.13.1",
     "firebase-functions": "^2.0.0",
     "oauth2-nodejs": "^0.2.0",
+    "qs": "^6.9.4",
     "secure-random-string": "^1.1.0"
   },
   "devDependencies": {
