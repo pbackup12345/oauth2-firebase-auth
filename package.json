@@ -1,5 +1,5 @@
 {
-  "name": "oauth2-firebase",
+  "name": "oauth2-firebase-auth",
   "version": "0.1.16",
   "description": "This library provides OAuth2 server implementation for Firebase",
   "main": "dist/index.js",
@@ -18,15 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/yoichiro/oauth2-firebase.git"
+    "url": "git+ssh://git@github.com/chrisvxd/oauth2-firebase-auth.git"
   },
-  "author": "Yoichiro Tanaka <yoichiro6642@gmail.com> (https://github.com/yoichiro)",
+  "author": "Chris Villa <chrisvilla@me.com> (https://github.com/chrisvxd)",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/yoichiro/oauth2-firebase/issues",
-    "email": "yoichiro6642@gmail.com"
-  },
-  "homepage": "https://github.com/yoichiro/oauth2-firebase.git",
+  "homepage": "https://github.com/chrisvxd/oauth2-firebase-auth.git",
   "dependencies": {
     "@types/cors": "^2.8.7",
     "@types/qs": "^6.9.5",

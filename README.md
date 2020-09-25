@@ -1,4 +1,4 @@
-# oauth2-firebase
+# oauth2-firebase-auth
 
 > ⚠️ This is a fork of [`oauth2-firebase`](https://github.com/yoichiro/oauth2-firebase), with additional support for custom login pages, amongst other minor changes. The docs have been kept largely the same until I get time to address them.
 
@@ -9,7 +9,7 @@ This library provides OAuth2 server implementation for Firebase. The points are:
 - Storing information into Cloud Firestore.
 - Supporting Authorization Code Grant, Implicit Grant and Client Credentials grant of OAuth 2.0.
 
-[![NPM Version](https://img.shields.io/npm/v/oauth2-firebase.svg)](https://www.npmjs.org/package/oauth2-firebase)
+[![NPM Version](https://img.shields.io/npm/v/oauth2-firebase-auth.svg)](https://www.npmjs.org/package/oauth2-firebase-auth)
 
 # How to install
 
@@ -28,7 +28,7 @@ with the `npm` command. We represent your project directory `${PROJECT_HOME}`.
 ```bash
 $ cd ${PROJECT_HOME}
 $ cd functions
-$ npm install oauth2-firebase --save
+$ npm install oauth2-firebase-auth --save
 ```
 
 ## Define endpoints as Cloud Functions
@@ -47,7 +47,7 @@ The code you need to write is the following:
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, googleAccountAuthentication, token} from "oauth2-firebase";
+import {authorize, Configuration, googleAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -65,7 +65,7 @@ exports.authentication = googleAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, facebookAccountAuthentication, token} from "oauth2-firebase";
+import {authorize, Configuration, facebookAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -83,7 +83,7 @@ exports.authentication = facebookAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, githubAccountAuthentication, token} from "oauth2-firebase";
+import {authorize, Configuration, githubAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -101,7 +101,7 @@ exports.authentication = githubAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, customAuthentication, token} from "oauth2-firebase";
+import {authorize, Configuration, customAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -279,7 +279,7 @@ In OpenID Connect specification, the userinfo endpoint is defined. It provides t
 You can provide the userinfo API endpoint easily by writing the following code:
 
 ```javascript
-import {userinfo} from "oauth2-firebase";
+import {userinfo} from "oauth2-firebase-auth";
 ...
 exports.userinfo = userinfo();
 ```
@@ -307,7 +307,7 @@ whether the passed access token is issued for your client or not. You can provid
 writing the following code:
 
 ```javascript
-import {tokeninfo} from "oauth2-firebase";
+import {tokeninfo} from "oauth2-firebase-auth";
 ...
 exports.tokeninfo = tokeninfo();
 ```
@@ -369,7 +369,7 @@ To customize the page design, you need to create a new class which implements th
 For example, the class code will be like the following:
 
 ```javascript
-import { ConsentViewTemplate } from "oauth2-firebase/dist/endpoint/views/consent_view_template";
+import { ConsentViewTemplate } from "oauth2-firebase-auth/dist/endpoint/views/consent_view_template";
 
 export class MyConsentViewTemplate implements ConsentViewTemplate {
   provide(): Promise<string> {
@@ -420,7 +420,7 @@ And, you need to set the instance to the Configuration class instance as like th
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, googleAccountAuthentication, token, userinfo} from "oauth2-firebase";
+import {authorize, Configuration, googleAccountAuthentication, token, userinfo} from "oauth2-firebase-auth";
 import {MyConsentViewTemplate} from "./my_consent_view_template"
 
 Configuration.init({
@@ -453,7 +453,7 @@ As the result, your code will be like the following:
 
 ```javascript
 import * as express from "express";
-import {AbstractProtectedResourceEndpoint} from "oauth2-firebase";
+import {AbstractProtectedResourceEndpoint} from "oauth2-firebase-auth";
 import {ProtectedResourceEndpointResponse} from "oauth2-nodejs";
 
 class FriendsEndpoint extends AbstractProtectedResourceEndpoint {
