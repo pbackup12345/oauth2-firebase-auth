@@ -1,5 +1,7 @@
 # oauth2-firebase
 
+> ⚠️ This is a fork of [`oauth2-firebase`](https://github.com/yoichiro/oauth2-firebase), with additional support for custom login pages, amongst other minor changes. The docs have been kept largely the same until I get time to address them.
+
 This library provides OAuth2 server implementation for Firebase. The points are:
 
 - Supporting Google Sign-In, GitHub Login and Facebook Login to authenticate users as Federation ID provider using Firebase Authentication.
