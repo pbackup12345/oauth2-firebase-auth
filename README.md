@@ -218,6 +218,8 @@ manually. To register a client definition, add a new doc in a "oauth2_clients" c
   - `grant_type` - This is an object. Each key represents a grant type, and each value is boolean whether the grant type is supported or not. You need to set these entries: `authorization_code`, `password`, `client_credentials` and `refresh_token`.
   - `response_type` - This is an object. Each key represents a response type, and each value is boolean whether the response type is supported or not. You need to set these entries: `code` and `token`.
   - `scope` - This is an object. Each key represents a scope, and each value is boolean whether the scope is supported or not. You need to set the entry: `profile`.
+  - `implicitConsent` - If `true`, will skip consent page.
+  - `browserRedirect` - If `true`, will tell authentication endpoint to let browser redirect after login, instead of the server/function. You probably want this enabled if using a custom login page to prevent CORS errors.
 
 The following is a sample JSON string which represents the values above:
 
