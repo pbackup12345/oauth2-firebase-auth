@@ -95,11 +95,68 @@ exports.authentication = githubAccountAuthentication();
 ...
 ```
 
+**Custom Login**
+
+```javascript
+import * as functions from "firebase-functions";
+import {authorize, Configuration, customAuthentication, token} from "oauth2-firebase";
+
+Configuration.init({
+  crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
+  project_api_key: functions.config().project.api_key
+});
+
+exports.token = token();
+exports.authorize = authorize();
+exports.authentication = customAuthentication("https://example.com/login");
+
+...
+```
+
 By the code above, the following endpoints are defined:
 
 - `https://.../token` - Token endpoint.
 - `https://.../authorize` - Authorization endpoint.
 - `https://.../authentication` - Login page for Google Sign-In.
+
+## Redirect your login form
+
+If you're using a custom login, you need to call the API and redirect to the `authentication` function once Firebase auth has logged in.
+
+```js
+const redirectToOAuth = async (
+  user: firebase.User,
+  url: string = process.env.OAUTH_URL
+) => {
+  if (!user) {
+    return;
+  }
+
+  const authToken = new URLSearchParams(window.location.search).get(
+    "authToken"
+  );
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      auth_token: authToken,
+      id_token: await user.getIdToken(),
+      success: "true",
+    }),
+  });
+
+  const data = await response.json();
+
+  window.location = data.url;
+};
+
+firebase
+  .auth()
+  .onAuthStateChanged((user) => redirectToOAuth(user, process.env.OAUTH_URL));
+```
 
 ## Generate a shared key
 
