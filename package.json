@@ -16,6 +16,9 @@
     "package": "yarn build:clean && yarn pack",
     "release": "yarn build:clean && yarn publish"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/chrisvxd/oauth2-firebase-auth.git"
