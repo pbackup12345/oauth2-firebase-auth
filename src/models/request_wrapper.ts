@@ -20,7 +20,11 @@ export class RequestWrapper implements Request {
     const result = new Map<string, string>();
     for (const key in this._original.query) {
       if (this._original.body.hasOwnProperty(key)) {
-        result.set(key, this._original.query[key]);
+        const val = this._original.query[key];
+
+        if (val && typeof val === "string") {
+          result.set(key, val as string);
+        }
       }
     }
     for (const key in this._original.body) {
