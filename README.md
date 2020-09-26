@@ -47,7 +47,7 @@ The code you need to write is the following:
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, googleAccountAuthentication, token} from "oauth2-firebase-auth";
+import {authorize, Configuration, garbageCollection, googleAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -57,6 +57,7 @@ Configuration.init({
 exports.token = token();
 exports.authorize = authorize();
 exports.authentication = googleAccountAuthentication();
+exports.garbageCollection = garbageCollection();
 
 ...
 ```
@@ -65,7 +66,7 @@ exports.authentication = googleAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, facebookAccountAuthentication, token} from "oauth2-firebase-auth";
+import {authorize, Configuration, garbageCollection, facebookAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -75,6 +76,7 @@ Configuration.init({
 exports.token = token();
 exports.authorize = authorize();
 exports.authentication = facebookAccountAuthentication();
+exports.garbageCollection = garbageCollection();
 
 ...
 ```
@@ -83,7 +85,7 @@ exports.authentication = facebookAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, githubAccountAuthentication, token} from "oauth2-firebase-auth";
+import {authorize, Configuration, garbageCollection, githubAccountAuthentication, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -93,6 +95,7 @@ Configuration.init({
 exports.token = token();
 exports.authorize = authorize();
 exports.authentication = githubAccountAuthentication();
+exports.garbageCollection = garbageCollection();
 
 ...
 ```
@@ -101,7 +104,7 @@ exports.authentication = githubAccountAuthentication();
 
 ```javascript
 import * as functions from "firebase-functions";
-import {authorize, Configuration, customAuthentication, token} from "oauth2-firebase-auth";
+import {authorize, Configuration, customAuthentication, garbageCollection, token} from "oauth2-firebase-auth";
 
 Configuration.init({
   crypto_auth_token_secret_key_32: functions.config().crypto.auth_token_secret_key_32,
@@ -111,6 +114,7 @@ Configuration.init({
 exports.token = token();
 exports.authorize = authorize();
 exports.authentication = customAuthentication("https://example.com/login");
+exports.garbageCollection = garbageCollection();
 
 ...
 ```
@@ -479,3 +483,12 @@ exports.friends = new FriendsEndpoint().endpoint;
 
 If the passed access token is invalid, the `handleRequest()` function will not be called and returns an error response
 by the abstract class.
+
+## Garbage Collection
+
+The `garbageCollection` function removes up expired tokens from the `oauth2_access_tokens` collection. It runs on a Firebase scheduled function.
+
+### `garbageCollection(expiry, interval)`
+
+- `expiry`: **number** (default = 86400) - the expiry time for your tokens. Used to limit the firebase query. The token's `expires_in` value is used for deleting.
+- `interval`: **string** (default = "every 1 hours") - the [firebase function interval](https://firebase.google.com/docs/functions/schedule-functions#write_a_scheduled_function), determining how often to check for expired tokens.
