@@ -15,16 +15,20 @@ const admin = require("firebase-admin");
 function garbageCollection(expiry = 86400, interval = "every 1 hours") {
     return functions.pubsub.schedule(interval).onRun(() => __awaiter(this, void 0, void 0, function* () {
         const db = admin.firestore();
-        const threshold = new Date().getTime() - expiry;
+        const now = new Date().getTime();
+        const threshold = now - expiry;
         const oldTokens = yield db
             .collection("oauth2_access_tokens")
             .where("created_on", "<=", threshold)
             .get();
         oldTokens.forEach((tokenSnapshot) => __awaiter(this, void 0, void 0, function* () {
-            yield db
-                .collection("oauth2_access_tokens")
-                .doc(tokenSnapshot.id)
-                .delete();
+            const data = tokenSnapshot.data();
+            if (now > data.created_on + data.expires_in) {
+                yield db
+                    .collection("oauth2_access_tokens")
+                    .doc(tokenSnapshot.id)
+                    .delete();
+            }
         }));
     }));
 }
