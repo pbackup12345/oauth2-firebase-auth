@@ -133,7 +133,7 @@ If you're using a custom login, you need to call the API and redirect to the `au
 ```js
 const redirectToOAuth = async (
   user: firebase.User,
-  url: string = process.env.OAUTH_URL
+  url: string = process.env.OAUTH_URL // Deployed `authentication` endpoint, hosted on Cloud Functions
 ) => {
   if (!user) {
     return;
