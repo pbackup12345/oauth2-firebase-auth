@@ -2,12 +2,13 @@
 
 > ⚠️ This is a fork of [`oauth2-firebase`](https://github.com/yoichiro/oauth2-firebase), with additional support for custom login pages, amongst other minor changes. The docs have been kept largely the same until I get time to address them.
 
-This library provides OAuth2 server implementation for Firebase. The points are:
+This library provides an OAuth2 server implementation for Firebase Auth:
 
-- Supporting Google Sign-In, GitHub Login and Facebook Login to authenticate users as Federation ID provider using Firebase Authentication.
-- Providing each endpoint for Cloud Functions.
-- Storing information into Cloud Firestore.
-- Supporting Authorization Code Grant, Implicit Grant and Client Credentials grant of OAuth 2.0.
+- Email and password or passwordless login via your custom Firebase Auth page (this fork)
+- Federated login (Google, GitHub, Facebook) with hosted pages
+- Cloud Function for OAuth2 endpoints
+- Cloud Firestore to store token information
+- OAuth 2.0 Compliant
 
 [![NPM Version](https://img.shields.io/npm/v/oauth2-firebase-auth.svg)](https://www.npmjs.org/package/oauth2-firebase-auth)
 
