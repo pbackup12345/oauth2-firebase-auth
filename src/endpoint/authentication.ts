@@ -53,15 +53,15 @@ class AuthenticationApp {
         Crypto.decrypt(request.getParameter("auth_token")!)
       );
 
+      let client;
+
       if (success === "true") {
         try {
           const idToken = await admin.auth().verifyIdToken(idTokenString);
 
           if (idToken.aud === process.env.GCLOUD_PROJECT) {
             // Check for implicit consent
-            const client = await CloudFirestoreClients.fetch(
-              authToken["client_id"]
-            );
+            client = await CloudFirestoreClients.fetch(authToken["client_id"]);
 
             // Call here to prevent unnecessary redirect to /consent
             if (client?.implicitConsent) {
@@ -91,6 +91,12 @@ class AuthenticationApp {
         }
       } else {
         console.log("error", error);
+      }
+
+      if (client?.browserRedirect) {
+        return resp.json({
+          error: "access_denied",
+        });
       }
 
       Navigation.redirect(resp, authToken["redirect_uri"], {
