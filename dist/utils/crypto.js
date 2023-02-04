@@ -20,6 +20,8 @@ Crypto.decrypt = (text) => {
     const encrypted = Buffer.from(divided.join(":"), "hex");
     console.log(encrypted);
     console.log(configuration_1.Configuration.instance.crypto_auth_token_secret_key_32);
+    console.log(iv);
+    console.log(divided.join(":"));
     const decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(configuration_1.Configuration.instance.crypto_auth_token_secret_key_32, "ascii"), iv);
     let decrypted = decipher.update(encrypted);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
