@@ -45,6 +45,7 @@ class AuthenticationApp {
             const idTokenString = request.getParameter("id_token");
             const success = request.getParameter("success");
             const error = request.getParameter("error");
+            console.log(JSON.stringify(req.body));
             const authToken = JSON.parse(utils_1.Crypto.decrypt(request.getParameter("auth_token")));
             let client;
             if (success === "true") {
