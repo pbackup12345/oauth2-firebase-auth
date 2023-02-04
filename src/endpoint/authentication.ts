@@ -49,10 +49,13 @@ class AuthenticationApp {
       const success = request.getParameter("success");
       const error = request.getParameter("error");
       console.log(JSON.stringify(req.body))
+      let authToken = {} as any;
 
-      const authToken = JSON.parse(
+      if (request.getParameter("auth_token")){
+        authToken = JSON.parse(
         Crypto.decrypt(request.getParameter("auth_token")!)
       );
+      } 
 
       let client;
 
