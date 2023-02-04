@@ -39,14 +39,11 @@
             user.getIdToken(true).then(idToken => {
               document.forms[0]["id_token"].value = idToken;
               document.forms[0]["success"].value = "true";
-              alert("a")
               document.forms[0].submit();
             }).catch(error => {
               console.log("error", error);
-              alert(error.toString())
               document.forms[0]["error"].value = error.toString();
               document.forms[0]["success"].value = "false";
-              alert("b")
               document.forms[0].submit();
             });
           } else {
