@@ -17,7 +17,7 @@ class AuthenticationApp {
     const authenticationApp = express();
     authenticationApp.use(cors({ origin: true }));
 
-    authenticationApp.set("views", path.join(__dirname, "../../views"));
+    authenticationApp.set("views", path.join(__dirname, "../views"));
 
     authenticationApp.get("/", (req, resp) => {
       const request = new RequestWrapper(req);

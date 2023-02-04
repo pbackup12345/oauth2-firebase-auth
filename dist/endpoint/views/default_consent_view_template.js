@@ -6,7 +6,7 @@ const path = require("path");
 class DefaultConsentViewTemplate {
     provide() {
         return new Promise((resolve, reject) => {
-            fs.readFile(path.join(__dirname, "../../../views/consent.ejs"), "utf8", (err, data) => {
+            fs.readFile(path.join(__dirname, "../../views/consent.ejs"), "utf8", (err, data) => {
                 if (err) {
                     console.error(err);
                     reject(err);

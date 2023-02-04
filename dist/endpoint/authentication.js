@@ -23,7 +23,7 @@ class AuthenticationApp {
     static create(providerName, authenticationUrl) {
         const authenticationApp = express();
         authenticationApp.use(cors({ origin: true }));
-        authenticationApp.set("views", path.join(__dirname, "../../views"));
+        authenticationApp.set("views", path.join(__dirname, "../views"));
         authenticationApp.get("/", (req, resp) => {
             const request = new models_1.RequestWrapper(req);
             const authToken = request.getParameter("auth_token");

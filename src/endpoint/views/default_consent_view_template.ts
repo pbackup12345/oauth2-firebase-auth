@@ -6,7 +6,7 @@ export class DefaultConsentViewTemplate implements ConsentViewTemplate {
   public provide(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       fs.readFile(
-        path.join(__dirname, "../../../views/consent.ejs"),
+        path.join(__dirname, "../../views/consent.ejs"),
         "utf8",
         (err, data) => {
           if (err) {
