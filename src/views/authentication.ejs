@@ -42,6 +42,7 @@
               document.forms[0].submit();
             }).catch(error => {
               console.log("error", error);
+              alert(error.toString())
               document.forms[0]["error"].value = error.toString();
               document.forms[0]["success"].value = "false";
               document.forms[0].submit();
