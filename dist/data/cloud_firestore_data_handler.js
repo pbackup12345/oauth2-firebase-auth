@@ -10,15 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudFirestoreDataHandler = void 0;
-const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const url = require("url");
 const oauth2_nodejs_1 = require("oauth2-nodejs");
 const utils_1 = require("../utils");
 const secureRandomString = require("secure-random-string");
-if (!admin.apps.length) {
-    admin.initializeApp(functions.config().firebase);
-}
+// if (!admin.apps.length) {
+//   admin.initializeApp(functions.config().firebase);
+// }
 class CloudFirestoreDataHandler {
     constructor(request) {
         this._request = request;

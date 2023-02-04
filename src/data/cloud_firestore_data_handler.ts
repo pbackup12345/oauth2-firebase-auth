@@ -1,4 +1,3 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as firestore from "@google-cloud/firestore";
 import * as url from "url";
@@ -6,9 +5,9 @@ import { AccessToken, AuthInfo, DataHandler, Request } from "oauth2-nodejs";
 import { Configuration } from "../utils";
 const secureRandomString = require("secure-random-string");
 
-if (!admin.apps.length) {
-  admin.initializeApp(functions.config().firebase);
-}
+// if (!admin.apps.length) {
+//   admin.initializeApp(functions.config().firebase);
+// }
 
 export class CloudFirestoreDataHandler implements DataHandler {
   private _request: Request;
