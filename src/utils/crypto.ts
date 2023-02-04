@@ -20,7 +20,7 @@ export class Crypto {
   };
 
   static decrypt = (text: string): string => {
-    console.log(text)
+    console.log(text+"n")
     const divided = text.split(":");
     const iv = Buffer.from(divided.shift()!, "hex");
     const encrypted = Buffer.from(divided.join(":"), "hex");

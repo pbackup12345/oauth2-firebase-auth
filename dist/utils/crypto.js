@@ -14,7 +14,7 @@ Crypto.encrypt = (text) => {
     return `${iv.toString("hex")}:${encrypted.toString("hex")}`;
 };
 Crypto.decrypt = (text) => {
-    console.log(text);
+    console.log(text + "n");
     const divided = text.split(":");
     const iv = Buffer.from(divided.shift(), "hex");
     const encrypted = Buffer.from(divided.join(":"), "hex");
