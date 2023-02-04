@@ -20,9 +20,12 @@ export class Crypto {
   };
 
   static decrypt = (text: string): string => {
+    console.log(text)
     const divided = text.split(":");
     const iv = Buffer.from(divided.shift()!, "hex");
     const encrypted = Buffer.from(divided.join(":"), "hex");
+    console.log(encrypted)
+    console.log(Configuration.instance.crypto_auth_token_secret_key_32)
     const decipher = crypto.createDecipheriv(
       "aes-256-cbc",
       Buffer.from(
