@@ -1,6 +1,6 @@
 {
   "name": "oauth2-firebase-auth",
-  "version": "0.2.2",
+  "version": "0.2.1",
   "description": "This library provides OAuth2 server implementation for Firebase",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,9 +12,9 @@
     "clean:pack": "rm -f *.tgz",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "build:clean": "npm run clean:pack && npm run clean && npm run build",
+    "build:clean": "yarn clean:pack && yarn clean && yarn build",
     "package": "yarn build:clean && yarn pack",
-    "release": "npm run build:clean && npm publish"
+    "release": "yarn build:clean && yarn publish"
   },
   "files": [
     "dist"
